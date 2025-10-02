@@ -7,6 +7,10 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import android.content.Context
 import bocasystems.com.sdk.BocaSystemsSDK
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /** FlutterBocaSystemsPlugin */
 class FlutterBocaSystemsPlugin : FlutterPlugin, MethodCallHandler {
@@ -26,66 +30,196 @@ class FlutterBocaSystemsPlugin : FlutterPlugin, MethodCallHandler {
             }
             "openSessionBT" -> {
                 val device = call.argument<String>("device")
-                val success = bocaSDK?.openSessionBT(device, channel) ?: false
-                result.success(success)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val success = bocaSDK?.openSessionBT(device, channel) ?: false
+                        withContext(Dispatchers.Main) {
+                            result.success(success)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("BT_CONNECTION_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "openSessionUSB" -> {
-                val success = bocaSDK?.openSessionUSB(channel) ?: false
-                result.success(success)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val success = bocaSDK?.openSessionUSB(channel) ?: false
+                        withContext(Dispatchers.Main) {
+                            result.success(success)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("USB_CONNECTION_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "openSessionWIFI" -> {
                 val ipAddress = call.argument<String>("ipAddress")
-                val success = bocaSDK?.openSessionWIFI(ipAddress, channel) ?: false
-                result.success(success)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val success = bocaSDK?.openSessionWIFI(ipAddress, channel) ?: false
+                        withContext(Dispatchers.Main) {
+                            result.success(success)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("WIFI_CONNECTION_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "closeSessionBT" -> {
-                bocaSDK?.closeSessionBT()
-                result.success(true)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        bocaSDK?.closeSessionBT()
+                        withContext(Dispatchers.Main) {
+                            result.success(true)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("BT_CLOSE_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "closeSessionUSB" -> {
-                bocaSDK?.closeSessionUSB()
-                result.success(true)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        bocaSDK?.closeSessionUSB()
+                        withContext(Dispatchers.Main) {
+                            result.success(true)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("USB_CLOSE_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "closeSessionWIFI" -> {
-                bocaSDK?.closeSessionWIFI()
-                result.success(true)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        bocaSDK?.closeSessionWIFI()
+                        withContext(Dispatchers.Main) {
+                            result.success(true)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("WIFI_CLOSE_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "verifyConnectionBT" -> {
-                val connected = bocaSDK?.verifyConnectionBT() ?: false
-                result.success(connected)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val connected = bocaSDK?.verifyConnectionBT() ?: false
+                        withContext(Dispatchers.Main) {
+                            result.success(connected)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("BT_VERIFY_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "verifyConnectionUSB" -> {
-                val connected = bocaSDK?.verifyConnectionUSB() ?: false
-                result.success(connected)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val connected = bocaSDK?.verifyConnectionUSB() ?: false
+                        withContext(Dispatchers.Main) {
+                            result.success(connected)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("USB_VERIFY_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "verifyConnectionWIFI" -> {
-                val connected = bocaSDK?.verifyConnectionWIFI() ?: false
-                result.success(connected)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val connected = bocaSDK?.verifyConnectionWIFI() ?: false
+                        withContext(Dispatchers.Main) {
+                            result.success(connected)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("WIFI_VERIFY_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "sendString" -> {
                 val string = call.argument<String>("string")
-                bocaSDK?.sendString(string)
-                result.success(true)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        bocaSDK?.sendString(string)
+                        withContext(Dispatchers.Main) {
+                            result.success(true)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("SEND_STRING_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "sendFile" -> {
                 val filename = call.argument<String>("filename")
                 val row = call.argument<Int>("row") ?: 0
                 val column = call.argument<Int>("column") ?: 0
-                val success = bocaSDK?.sendFile(filename, row, column) ?: false
-                result.success(success)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val success = bocaSDK?.sendFile(filename, row, column) ?: false
+                        withContext(Dispatchers.Main) {
+                            result.success(success)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("SEND_FILE_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "downloadLogo" -> {
                 val filename = call.argument<String>("filename")
                 val idnum = call.argument<Int>("idnum") ?: 0
-                val success = bocaSDK?.downloadLogo(filename, idnum) ?: false
-                result.success(success)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val success = bocaSDK?.downloadLogo(filename, idnum) ?: false
+                        withContext(Dispatchers.Main) {
+                            result.success(success)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("DOWNLOAD_LOGO_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "printLogo" -> {
                 val idnum = call.argument<Int>("idnum") ?: 0
                 val row = call.argument<Int>("row") ?: 0
                 val column = call.argument<Int>("column") ?: 0
-                val success = bocaSDK?.printLogo(idnum, row, column) ?: false
-                result.success(success)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val success = bocaSDK?.printLogo(idnum, row, column) ?: false
+                        withContext(Dispatchers.Main) {
+                            result.success(success)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("PRINT_LOGO_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "changeConfiguration" -> {
                 val path = call.argument<String>("path") ?: "<P1>"
@@ -94,24 +228,74 @@ class FlutterBocaSystemsPlugin : FlutterPlugin, MethodCallHandler {
                 val dithered = call.argument<Boolean>("dithered") ?: true
                 val stocksizeindex = call.argument<Int>("stocksizeindex") ?: 0
                 val orientation = call.argument<String>("orientation") ?: "<LM>"
-                bocaSDK?.changeConfiguration(path, resolution, scaled, dithered, stocksizeindex, orientation)
-                result.success(true)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        bocaSDK?.changeConfiguration(path, resolution, scaled, dithered, stocksizeindex, orientation)
+                        withContext(Dispatchers.Main) {
+                            result.success(true)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("CONFIGURATION_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "clearMemory" -> {
-                bocaSDK?.clearMemory()
-                result.success(true)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        bocaSDK?.clearMemory()
+                        withContext(Dispatchers.Main) {
+                            result.success(true)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("CLEAR_MEMORY_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "printCut" -> {
-                bocaSDK?.printCut()
-                result.success(true)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        bocaSDK?.printCut()
+                        withContext(Dispatchers.Main) {
+                            result.success(true)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("PRINT_CUT_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "printNoCut" -> {
-                bocaSDK?.printNoCut()
-                result.success(true)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        bocaSDK?.printNoCut()
+                        withContext(Dispatchers.Main) {
+                            result.success(true)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("PRINT_NO_CUT_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             "getStatus" -> {
-                val status = bocaSDK?.getStatus() ?: ""
-                result.success(status)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val status = bocaSDK?.getStatus() ?: ""
+                        withContext(Dispatchers.Main) {
+                            result.success(status)
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            result.error("GET_STATUS_ERROR", e.message, null)
+                        }
+                    }
+                }
             }
             else -> {
                 result.notImplemented()
@@ -223,12 +407,6 @@ class BocaSystemSDKWrapper(context: Context) : BocaSystemsSDK() {
     fun getStatus(): String {
         return getStatusFromSDK()
     }
-    
-    private fun getStatusFromSDK(): String {
-        // Since StatusReturned is static but package-private, we need to handle it differently
-        // Instead, we'll use our own status buffer
-        return statusBuffer
-    }
 
     fun closeAllSessions() {
         if (VerifyConnectionBT()) {
@@ -240,6 +418,12 @@ class BocaSystemSDKWrapper(context: Context) : BocaSystemsSDK() {
         if (VerifyConnectionWIFI()) {
             CloseSessionWIFI()
         }
+    }
+
+    private fun getStatusFromSDK(): String {
+        // Since StatusReturned is static but package-private, we need to handle it differently
+        // Instead, we'll use our own status buffer
+        return statusBuffer
     }
 
     override fun StatusReportCallback(statusReport: String?) {
